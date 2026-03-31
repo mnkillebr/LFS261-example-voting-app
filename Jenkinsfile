@@ -18,11 +18,10 @@ pipeline {
             when {
                 branch 'master'
                 changeset "**/worker/**"
-                }               
-                steps {
-                    echo 'step 3'
-                    sleep 5
-                }
+            }               
+            steps {
+                echo 'step 3'
+                sleep 5
             }
         }
     }
