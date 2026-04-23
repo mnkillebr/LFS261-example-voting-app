@@ -3,9 +3,6 @@ pipeline {
 
   stages {
     stage("worker-build") {
-      when {
-        changeset "**/worker/**"
-      }
       agent {
         docker {
           image 'maven:3.9.8-sapmachine-21'
@@ -20,9 +17,6 @@ pipeline {
       }
     }
     stage("worker-test") {
-      when {
-        changeset "**/worker/**"
-      }
       agent {
         docker {
           image 'maven:3.9.8-sapmachine-21'
@@ -37,9 +31,6 @@ pipeline {
       }
     }
     stage("worker-package") {
-      when {
-        changeset "**/worker/**"
-      }
       agent {
         docker {
           image 'maven:3.9.8-sapmachine-21'
@@ -56,10 +47,6 @@ pipeline {
     }
     stage("worker-docker-package") {
       agent any
-      when {
-        changeset "**/worker/**"
-        branch 'master'
-      }
       steps {
         echo 'Packaging worker app with docker..'
         script {
@@ -72,9 +59,6 @@ pipeline {
       }
     }   
     stage("result-build") {
-      when {
-        changeset "**/result/**"
-      }
       agent {
         docker {
           image 'node:22.4.0-slim'
@@ -88,9 +72,6 @@ pipeline {
       }
     }
     stage("result-test") {
-      when {
-        changeset "**/result/**"
-      }
       agent {
         docker {
           image 'node:22.4.0-slim'
@@ -106,10 +87,6 @@ pipeline {
     }
     stage("result-docker-package") {
       agent any
-      when {
-        changeset "**/result/**"
-        branch 'master'
-      }
       steps {
         echo 'Packaging result app with docker..'
         script {
@@ -152,10 +129,6 @@ pipeline {
     }
     stage("vote-integration") { 
       agent any 
-      when { 
-        changeset "**/vote/**" 
-        branch 'master' 
-      } 
       steps { 
         echo 'Running Integration Tests on vote app' 
         dir('vote') { 
@@ -165,10 +138,6 @@ pipeline {
     } 
     stage("vote-docker-package") {
       agent any
-      when {
-        changeset "**/vote/**"
-        branch 'master'
-      }
       steps {
         echo 'Packaging vote app with docker..'
         script {
@@ -182,9 +151,6 @@ pipeline {
     }
     stage('deploy to dev') {
       agent any
-      when {
-        branch 'master'
-      }
       steps {
         echo 'Deploy instavote app with docker compose'
         sh 'docker-compose up -d'
