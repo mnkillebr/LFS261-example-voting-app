@@ -148,15 +148,15 @@ pipeline {
       }
     }
     stage('Debug Network') {
+      agent any
       steps {
-        // 1. Check the IP of the container running the docker commands
+        echo 'Check the IP of the container running the docker commands'
         sh 'hostname -I'
         
-        // 2. Check the Docker Host environment variable
+        echo 'Check the Docker Host environment variable'
         sh 'echo "Docker Host is: $DOCKER_HOST"'
         
-        // 3. Inspect the running project container to see its internal IP
-        // Replace 'my-service' with your service name from docker-compose.yml
+        echo 'Inspect the running project container to see its internal IP'
         sh 'docker inspect -f "{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}" $(docker compose ps -q vote)'
       }
     }
