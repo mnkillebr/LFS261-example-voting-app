@@ -58,6 +58,7 @@ pipeline {
       agent any
       when {
         changeset "**/worker/**"
+        branch 'master'
       }
       steps {
         echo 'Packaging worker app with docker..'
@@ -107,6 +108,7 @@ pipeline {
       agent any
       when {
         changeset "**/result/**"
+        branch 'master'
       }
       steps {
         echo 'Packaging result app with docker..'
@@ -135,12 +137,12 @@ pipeline {
     } 
     stage("vote-test") { 
       agent {
-        docker{
+        docker {
           image 'python:3.11-slim'
           args '--user root'
         }
       }
-      steps{ 
+      steps { 
         echo 'Running Unit Tests on vote app..' 
         dir('vote') {            
           sh "pip install -r requirements.txt"
@@ -148,10 +150,24 @@ pipeline {
         } 
       } 
     }
+    stage("vote-integration") { 
+      agent any 
+      when { 
+        changeset "**/vote/**" 
+        branch 'master' 
+      } 
+      steps { 
+        echo 'Running Integration Tests on vote app' 
+        dir('vote') { 
+          sh 'sh integration_test.sh' 
+        } 
+      } 
+    } 
     stage("vote-docker-package") {
       agent any
       when {
         changeset "**/vote/**"
+        branch 'master'
       }
       steps {
         echo 'Packaging vote app with docker..'
@@ -162,6 +178,16 @@ pipeline {
             voteImage.push("latest")
           }
         }
+      }
+    }
+    stage('deploy to dev') {
+      agent any
+      when {
+        branch 'master'
+      }
+      steps {
+        echo 'Deploy instavote app with docker compose'
+        sh 'docker-compose up -d'
       }
     }
   }
