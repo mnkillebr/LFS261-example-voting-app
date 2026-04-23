@@ -54,6 +54,71 @@ pipeline {
         }
       }
     }
+    stage("worker-docker-package") {
+      agent any
+      when {
+        changeset "**/worker/**"
+      }
+      steps {
+        echo 'Packaging worker app with docker..'
+        script {
+          docker.withRegistry('https://index.docker.io/v1/', 'dockerlogin') {
+            def workerImage = docker.build("killebrew4dev/worker:v${env.BUILD_ID}", "./worker")
+            workerImage.push()
+            workerImage.push("latest")
+          }
+        }
+      }
+    }   
+    stage("result-build") {
+      when {
+        changeset "**/result/**"
+      }
+      agent {
+        docker {
+          image 'node:22.4.0-slim'
+        }
+      }
+      steps {
+        echo 'Compiling result app..'
+        dir('result') {
+          sh 'npm install'
+        }
+      }
+    }
+    stage("result-test") {
+      when {
+        changeset "**/result/**"
+      }
+      agent {
+        docker {
+          image 'node:22.4.0-slim'
+        }
+      }
+      steps {
+        echo 'Running unit tests on result app..'
+        dir('result') {
+          sh 'npm install'
+          sh 'npm test'
+        }
+      }
+    }
+    stage("result-docker-package") {
+      agent any
+      when {
+        changeset "**/result/**"
+      }
+      steps {
+        echo 'Packaging result app with docker..'
+        script {
+          docker.withRegistry('https://index.docker.io/v1/', 'dockerlogin') {
+            def resultImage = docker.build("killebrew4dev/result:v${env.BUILD_ID}", "./result")
+            resultImage.push()
+            resultImage.push("latest")
+          }
+        }
+      }
+    }
     stage("vote-build") { 
       agent {
         docker {
@@ -82,39 +147,20 @@ pipeline {
           sh 'nosetests -v'              
         } 
       } 
-    } 
-    stage("result-build") {
-      when {
-        changeset "**/result/**"
-      }
-      agent {
-        docker {
-          image 'node:22.4.0-slim'
-          args '--user root'
-        }
-      }
-      steps {
-        echo 'Compiling result app..'
-        dir('result') {
-          sh 'npm install'
-        }
-      }
     }
-    stage("result-test") {
+    stage("vote-docker-package") {
+      agent any
       when {
-        changeset "**/result/**"
-      }
-      agent {
-        docker {
-          image 'node:22.4.0-slim'
-          args '--user root' 
-        }
+        changeset "**/vote/**"
       }
       steps {
-        echo 'Running unit tests on result app..'
-        dir('result') {
-          sh 'npm install'
-          sh 'npm test'
+        echo 'Packaging vote app with docker..'
+        script {
+          docker.withRegistry('https://index.docker.io/v1/', 'dockerlogin') {
+            def voteImage = docker.build("killebrew4dev/vote:v${env.BUILD_ID}", "./vote")
+            voteImage.push()
+            voteImage.push("latest")
+          }
         }
       }
     }
