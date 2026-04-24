@@ -156,8 +156,11 @@ pipeline {
         echo 'Check the Docker Host environment variable'
         sh 'echo "Docker Host is: $DOCKER_HOST"'
         
-        echo 'Check running containers'
+        echo 'Check all containers'
 	sh 'docker ps -a'
+
+	echo 'Check vote service logs'
+        sh 'docker logs vote'
       }
     }
   }

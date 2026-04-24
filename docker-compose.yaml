@@ -9,11 +9,12 @@ services:
   vote:
     image: killebrew4dev/vote:latest
     ports:
-      - 5000:80
+      - 5150:80
     depends_on:
       - redis
     networks:
       - instavote
+    restart: on-failure
 
   redis:
     image: redis:alpine
