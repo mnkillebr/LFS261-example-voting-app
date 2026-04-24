@@ -157,10 +157,7 @@ pipeline {
         sh 'echo "Docker Host is: $DOCKER_HOST"'
         
         echo 'Check running containers'
-	sh 'docker ps'
-
-        echo 'Inspect the running project container to see its internal IP'
-        sh 'docker inspect  "{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}" $(docker compose ps -q vote)'
+	sh 'docker ps -a'
       }
     }
   }
