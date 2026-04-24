@@ -156,11 +156,17 @@ pipeline {
         echo 'Check the Docker Host environment variable'
         sh 'echo "Docker Host is: $DOCKER_HOST"'
         
-        echo 'Check all containers'
-	sh 'docker ps -a'
+        echo 'Check running containers'
+	sh 'docker ps'
 
 	echo 'Check vote service logs'
         sh 'docker logs vote'
+
+	echo 'Check ip address of vote service to see if reachable'
+	sh 'docker inspect avote_mono-pipe_feature_monopipe-vote-1 | grep IPAddress'
+
+	echo 'Check if responding on DinD localhost'
+	sh 'wget -qO- http://localhost:5150 || echo "Failed to reach on localhost"'
       }
     }
   }
