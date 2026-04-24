@@ -160,7 +160,7 @@ pipeline {
 	sh 'docker ps'
 
 	echo 'Check vote service logs'
-        sh 'docker logs vote'
+        sh 'docker logs avote_mono-pipe_feature_monopipe-vote-1'
 
 	echo 'Check ip address of vote service to see if reachable'
 	sh 'docker inspect avote_mono-pipe_feature_monopipe-vote-1 | grep IPAddress'
