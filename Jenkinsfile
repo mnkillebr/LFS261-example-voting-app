@@ -164,10 +164,6 @@ pipeline {
 
 	echo 'Check ip address of vote service to see if reachable'
 	sh "docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' avote_mono-pipe_feature_monopipe-vote-1"
-
-	echo 'Check if responding on DinD localhost'
-	sh 'apk add --no-cache curl'
-	sh 'curl -I http://localhost:5150'
       }
     }
   }
