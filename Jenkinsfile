@@ -9,6 +9,9 @@ pipeline {
           args '-v$HOME/.m2:/root/.m2'
         }
       }
+      when {
+        changeset '**/worker/**'
+      }
       steps {
         echo 'Compiling worker app..'
         dir('worker') {
@@ -22,6 +25,9 @@ pipeline {
           image 'maven:3.9.8-sapmachine-21'
           args '-v$HOME/.m2:/root/.m2'
         }
+      }
+      when {
+        changeset '**/worker/**'
       }
       steps {
         echo 'Running Unit Tests on worker app..'
@@ -37,6 +43,10 @@ pipeline {
           args '-v$HOME/.m2:/root/.m2'
         }
       }
+      when {
+        branch 'master'
+        changeset '**/worker/**'
+      }
       steps {
         echo 'Packaging worker app..'
         dir('worker') {
@@ -47,6 +57,10 @@ pipeline {
     }
     stage("worker-docker-package") {
       agent any
+      when {
+        branch 'master'
+        changeset '**/worker/**'
+      }
       steps {
         echo 'Packaging worker app with docker..'
         script {
@@ -64,6 +78,9 @@ pipeline {
           image 'node:22.4.0-slim'
         }
       }
+      when {
+        changeset '**/result/**'
+      }
       steps {
         echo 'Compiling result app..'
         dir('result') {
@@ -77,6 +94,9 @@ pipeline {
           image 'node:22.4.0-slim'
         }
       }
+      when {
+        changeset '**/result/**'
+      }
       steps {
         echo 'Running unit tests on result app..'
         dir('result') {
@@ -87,6 +107,10 @@ pipeline {
     }
     stage("result-docker-package") {
       agent any
+      when {
+        changeset '**/result/**'
+        branch 'master'
+      }
       steps {
         echo 'Packaging result app with docker..'
         script {
@@ -105,6 +129,9 @@ pipeline {
           args '--user root'
         }
       }
+      when {
+        changeset '**/vote/**'
+      }
       steps { 
         echo 'Compiling vote app..' 
         dir('vote') {
@@ -118,6 +145,9 @@ pipeline {
           image 'python:3.11-slim'
           args '--user root'
         }
+      }
+      when {
+        changeset '**/vote/**'
       }
       steps { 
         echo 'Running Unit Tests on vote app..' 
@@ -142,6 +172,9 @@ pipeline {
     }
     stage('deploy to dev') {
       agent any
+      when {
+        branch 'master'
+      }
       steps {
         echo 'Deploy instavote app with docker compose'
         sh 'docker compose up -d'
