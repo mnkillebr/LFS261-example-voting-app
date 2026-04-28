@@ -159,6 +159,10 @@ pipeline {
     }
     stage("vote-docker-package") {
       agent any
+      when {
+        changeset '**/vote/**'
+	branch 'master'
+      }
       steps {
         echo 'Packaging vote app with docker..'
         script {
@@ -178,25 +182,6 @@ pipeline {
       steps {
         echo 'Deploy instavote app with docker compose'
         sh 'docker compose up -d'
-      }
-    }
-    stage('Debug Network') {
-      agent any
-      steps {
-        echo 'Check the IP of the container running the docker commands'
-        sh 'hostname -I'
-        
-        echo 'Check the Docker Host environment variable'
-        sh 'echo "Docker Host is: $DOCKER_HOST"'
-        
-        echo 'Check running containers'
-	sh 'docker ps'
-
-	echo 'Check vote service logs'
-        sh 'docker logs avote_mono-pipe_feature_monopipe-vote-1'
-
-	echo 'Check ip address of vote service to see if reachable'
-	sh "docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' avote_mono-pipe_feature_monopipe-vote-1"
       }
     }
   }
