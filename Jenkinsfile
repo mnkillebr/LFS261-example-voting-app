@@ -44,7 +44,7 @@ pipeline {
         }
       }
       when {
-        branch 'feature/monopipe'
+        branch 'master'
         changeset '**/worker/**'
       }
       steps {
@@ -58,7 +58,7 @@ pipeline {
     stage("worker-docker-package") {
       agent any
       when {
-        branch 'feature/monopipe'
+        branch 'master'
         changeset '**/worker/**'
       }
       steps {
@@ -109,7 +109,7 @@ pipeline {
       agent any
       when {
         changeset '**/result/**'
-        branch 'feature/monopipe'
+        branch 'master'
       }
       steps {
         echo 'Packaging result app with docker..'
@@ -161,7 +161,7 @@ pipeline {
       agent any
       when {
         changeset '**/vote/**'
-	branch 'feature/monopipe'
+	branch 'master'
       }
       steps {
         echo 'Packaging vote app with docker..'
@@ -177,7 +177,7 @@ pipeline {
     stage('Sonarqube') {
       agent any
       when{
-        branch 'feature/monopipe'
+        branch 'master'
       }
       environment{
         sonarpath = tool 'SonarScanner'
@@ -200,7 +200,7 @@ pipeline {
     stage('deploy to dev') {
       agent any
       when {
-        branch 'feature/monopipe'
+        branch 'master'
       }
       steps {
         echo 'Deploy instavote app with docker compose'
