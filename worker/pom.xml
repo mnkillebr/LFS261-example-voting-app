@@ -99,27 +99,24 @@
         <artifactId>jacoco-maven-plugin</artifactId>
         <version>0.8.12</version>
         <executions>
-          <!-- Prepare the agent for unit tests -->
           <execution>
             <id>prepare-agent</id>
             <goals>
               <goal>prepare-agent</goal>
             </goals>
             <configuration>
-              <!-- default destFile = ${project.build.directory}/jacoco.exec -->
               <propertyName>surefireArgLine</propertyName>
             </configuration>
           </execution>
 
-          <!-- Create the XML report after tests have run -->
           <execution>
             <id>report</id>
-            <phase>verify</phase>   <!-- or 'test' if you only run unit tests -->
+            <phase>verify</phase>   
             <goals>
               <goal>report</goal>
             </goals>
             <configuration>
-              <output>XML</output>                     <!-- <-- important -->
+              <output>XML</output>                
               <dataFile>${project.build.directory}/jacoco.exec</dataFile>
               <outputDirectory>${project.reporting.outputDirectory}/jacoco</outputDirectory>
             </configuration>
