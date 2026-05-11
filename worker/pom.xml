@@ -133,7 +133,8 @@
               <argLine>${surefireArgLine}</argLine>
 	      <includes>
                 <include>**/UnitWorker.java</include>
-              </includes>
+		<include>**/*Tests.java</include> 
+             </includes>
             </configuration>
       </plugin>
     </plugins>
