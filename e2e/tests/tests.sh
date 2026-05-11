@@ -2,7 +2,7 @@
 
 # Function to get current vote count
 get_vote_count() {
-    phantomjs render.js "http://result:80/" | grep -i vote | cut -d ">" -f 4 | cut -d " " -f1
+    node get-vote-count.js "http://result:80"
 }
 
 # Wait for services to be ready

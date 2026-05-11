@@ -1,0 +1,9 @@
+{
+  "name": "voting-app-e2e",
+  "private": true,
+  "version": "1.0.0",
+  "description": "End-to-end checks for the voting app result service",
+  "dependencies": {
+    "socket.io-client": "^4.7.2"
+  }
+}
