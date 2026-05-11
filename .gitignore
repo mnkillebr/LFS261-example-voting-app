@@ -1,3 +1,4 @@
+**/.env
 *.pyc
 project.lock.json
 bin/
