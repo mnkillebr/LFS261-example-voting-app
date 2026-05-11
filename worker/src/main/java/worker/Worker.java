@@ -7,6 +7,7 @@ import redis.clients.jedis.exceptions.JedisConnectionException;
 import java.sql.*;
 import org.json.JSONObject;
 import java.util.List;
+import java.util.logging.Logger;
 
 class Worker {
   public static void main(String[] args) {
@@ -124,23 +125,25 @@ class Worker {
     }
   }
 static class FizzBuzz {
+    private static final Logger LOGGER = Logger.getLogger(FizzBuzz.class.getName());
+
     public static void generate(int limit) {
       for (int i = 1; i <= limit; i++) {
         if (i % 3 == 0 && i % 5 == 0) {
-          System.out.println("FizzBuzz");
+          LOGGER.info("FizzBuzz");
         } else if (i % 3 == 0) {
-          System.out.println("Fizz");
+          LOGGER.info("Fizz");
         } else if (i % 5 == 0) {
-          System.out.println("Buzz");
+          LOGGER.info("Buzz");
         } else {
-          System.out.println(i);
+          LOGGER.info(Integer.toString(i));
         }
       }
     }
 
     // Example of how it could be called, not part of the main application flow
     public static void main(String[] args) {
-        System.out.println("FizzBuzz demonstration:");
+        LOGGER.info("FizzBuzz demonstration:");
         generate(20); // Generate FizzBuzz up to 20
     }
   }
