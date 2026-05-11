@@ -32,7 +32,7 @@ pipeline {
       steps {
         echo 'Running Unit Tests on worker app..'
         dir('worker') {
-          sh 'mvn clean test'
+          sh 'mvn clean verify'
         }
       }
     }
@@ -174,6 +174,24 @@ pipeline {
         }
       }
     }
+    stage('worker-sonar-coverage') {
+      agent {
+        docker {
+          image 'maven:3.9.8-sapmachine-21'
+          args '-v$HOME/.m2:/root/.m2'
+        }
+      }
+      when {
+        branch 'master'
+      }
+      steps {
+        echo 'Generating worker coverage for SonarQube..'
+        dir('worker') {
+          sh 'mvn clean verify'
+          sh 'test -f target/site/jacoco/jacoco.xml'
+        }
+      }
+    }
     stage('Sonarqube') {
       agent any
       when{
@@ -185,6 +203,7 @@ pipeline {
 
       steps {
         echo 'Running Sonarqube Analysis..'
+	sh 'test -f worker/target/site/jacoco/jacoco.xml'
         withSonarQubeEnv('sonar-instavote') {
           sh "${sonarpath}/bin/sonar-scanner -Dproject.settings=sonar-project.properties -Dorg.jenkinsci.plugins.durabletask.BourneShellScript.HEARTBEAT_CHECK_INTERVAL=86400"
         }
