@@ -9,7 +9,6 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <surefireArgLine></surefireArgLine>
   </properties>
 
   <dependencies>
@@ -105,9 +104,6 @@
             <goals>
               <goal>prepare-agent</goal>
             </goals>
-            <configuration>
-              <propertyName>surefireArgLine</propertyName>
-            </configuration>
           </execution>
 
           <execution>
@@ -120,8 +116,6 @@
               <formats>
                 <format>XML</format>
               </formats>
-              <dataFile>${project.build.directory}/jacoco.exec</dataFile>
-              <outputDirectory>${project.reporting.outputDirectory}/jacoco</outputDirectory>
             </configuration>
           </execution>
         </executions>
@@ -131,7 +125,9 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <version>3.2.5</version>
             <configuration>
-              <argLine>${surefireArgLine}</argLine>
+              <argLine>@{argLine}</argLine>
+	      <useModulePath>false</useModulePath>
+              <useSystemClassLoader>false</useSystemClassLoader>
 	      <includes>
                 <include>**/UnitWorker.java</include>
 		<include>**/*Tests.java</include> 
