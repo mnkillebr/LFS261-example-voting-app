@@ -233,7 +233,7 @@ pipeline {
         echo "Commit ID: ${GIT_COMMIT}"
         echo "Triggering vote app deployment"
         // passing variables to job deployment run by vote-app-deploy repository Jenkinsfile
-        build job: 'instavote/deployment', parameters: [string(name: 'DOCKERTAG', value: "${env.BUILD_ID}")]
+        build job: 'instavote/deployment', parameters: [string(name: 'DOCKERTAG', value: "v${env.BUILD_ID}")]
       }    
     }
   }
