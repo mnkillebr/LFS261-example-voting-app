@@ -161,20 +161,20 @@ pipeline {
       agent any
       when {
         changeset '**/vote/**'
-	branch 'master'
+        branch 'master'
       }
       steps {
         echo 'Running Integration Tests on vote app'
-	dir('vote') {
-	  sh 'sh integration_test.sh'
-	}
+        dir('vote') {
+          sh 'sh integration_test.sh'
+        }
       }
     }
     stage("vote-docker-package") {
       agent any
       when {
         changeset '**/vote/**'
-	branch 'master'
+        branch 'master'
       }
       steps {
         echo 'Packaging vote app with docker..'
@@ -220,16 +220,20 @@ pipeline {
         sh 'docker compose up -d'
       }
     }
-    stage('Trigger deployment') {
+    stage('Trigger vote deployment') {
       agent any
+      when {
+        changeset '**/vote/**'
+        branch 'master'
+      }
       environment{
         def GIT_COMMIT = "${env.GIT_COMMIT}"
       }
       steps{
-        echo "${GIT_COMMIT}"
-        echo "triggering deployment"
+        echo "Commit ID: ${GIT_COMMIT}"
+        echo "Triggering vote app deployment"
         // passing variables to job deployment run by vote-app-deploy repository Jenkinsfile
-        build job: 'instavote/deployment', parameters: [string(name: 'DOCKERTAG', value: GIT_COMMIT)]
+        build job: 'instavote/deployment', parameters: [string(name: 'DOCKERTAG', value: "${env.BUILD_ID}")]
       }    
     }
   }
